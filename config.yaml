@@ -1,0 +1,3 @@
+dossiers_autorises:
+  - chemin: "~/Desktop/test_organisation"
+    nom: "Bureau test"
