@@ -1,6 +1,5 @@
 from pathlib import Path
 import yaml
-
 def dossier_autorise(dossier: Path, dossiers_autorises: list[Path]) -> bool:
     path_absolut = dossier.expanduser().resolve() #corriger la forme du path pour pouvoir utiliser is_relativa_to
     autorise = False
@@ -23,6 +22,22 @@ def charger_config(chemin_config: Path) -> list[Path]:
             dossier_autorises.append(path_formate)
     return dossier_autorises
 
+def dossier_existe(dossier: Path) -> bool :
+    return dossier.exists()
+
+def creer_dossier(dossier: Path) -> bool : 
+    creer = False
+    try:
+        if dossier_existe(dossier): 
+            print("Dossier existe déjà")
+        else:
+            dossier.mkdir(parents=True, exist_ok=True)
+            creer = True
+    except PermissionError as e:
+        print(f"Erreur de permission : {e}")
+    return creer
+
+    
 
 #testes
 if __name__ == "__main__":
