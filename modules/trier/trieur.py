@@ -35,6 +35,21 @@ def charger_config(chemin_config: Path) -> list[Path]:
 
     return dossiers_autorises
 
+def ajouter_au_config(dossier: Path, chemin_config: Path) -> list[Path]:
+    new_chemin = {
+        "chemin": str(formatage_path(dossier)),
+        "nom": dossier.name,
+    }
+    with open(chemin_config, "r", encoding="utf-8") as fichier:
+        contenu = yaml.safe_load(fichier)
+
+    contenu["dossiers_autorises"].append(new_chemin)
+
+    with open(chemin_config, "w", encoding="utf-8") as fichier:
+        yaml.dump(contenu, fichier, allow_unicode=True, sort_keys=False)
+
+    return charger_config(chemin_config)
+    
 
 def dossier_existe(dossier: Path) -> bool:
     return formatage_path(dossier).exists()
@@ -54,7 +69,7 @@ def creer_dossier(dossier: Path) -> bool:
         return False
 
 
-def deplacer(fichier: Path, dossier_cible: Path, dossiers_autorises: list[Path]) -> bool:
+def deplacer(fichier: Path, dossier_cible: Path, dossiers_autorises: list[Path],chemin_config : Path ) -> bool:
     try:
         if not dossier_existe(fichier):
             print("Le fichier n'existe pas.")
@@ -73,6 +88,7 @@ def deplacer(fichier: Path, dossier_cible: Path, dossiers_autorises: list[Path])
                 return False
 
             creer_dossier(dossier_cible)
+            dossiers_autorises = ajouter_au_config(dossier_cible, chemin_config)
             print(f"Dossier cible après création : {dossier_cible}")
         destination = formatage_path(dossier_cible) / fichier.name
         shutil.move(formatage_path(fichier), destination)
@@ -109,11 +125,11 @@ if __name__ == "__main__":
     # print(est_autorise(test5, dossiers))  # False
 
     # Cas 1 — déplacement valide dossier inexistant
-    # deplacer(
-    #     Path("~/Desktop/test_organisation/test.pdf"),
-    #     Path("~/Desktop/test_organisation/PDF"),
-    #     dossiers
-    # )
+    deplacer(
+        Path("~/Desktop/test_organisation/test.pdf"),
+        Path("~/Desktop/test_organisation/PDF"),
+        dossiers, Path("config.yaml")
+    )
 
     # Cas 2 — fichier source non autorisé fichier se trouve dans un dossier non autoriser
     # deplacer(

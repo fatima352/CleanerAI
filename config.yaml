@@ -1,3 +1,5 @@
 dossiers_autorises:
-  - chemin: "~/Desktop/test_organisation"
-    nom: "Bureau test"
+- chemin: ~/Desktop/test_organisation
+  nom: Bureau test
+- chemin: /Users/fatima/Desktop/test_organisation/PDF
+  nom: PDF
